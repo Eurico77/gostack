@@ -1,10 +1,11 @@
 import ICreateUserData from './ICreateUserData';
 
-export default function createUser({ name, email, password }: ICreateUserData) {
+export default function createUser({ name, email, password, techs }: ICreateUserData) {
    const user = {
       name,
       email,
-      password
+      password,
+      techs
    }
 
    return user
