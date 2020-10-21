@@ -1,36 +1,33 @@
-import { startOfHour } from 'date-fns';
-import { getCustomRepository } from 'typeorm';
+import { getRepository } from 'typeorm';
 
 import User from '../models/User'
-import UserRepository from '../repositories/UserRepository'
 
-interface Request {
-  date: Date
+interface Body {
+  name: string,
+  email: string,
+  password: string
 }
 
 class CreateUserService {
-  public async execute({ date }: Request): Promise<User> {
-    const userRepository = getCustomRepository(UserRepository);
-    const userDate = startOfHour(date)
+  public async execute({ name, email, password }: Body): Promise<User> {
+    const userRepository = getRepository(User);
 
-    const findUserForDate = userRepository.findByDate(
-      userDate
-    )
-    if (findUserForDate) {
-      throw Error('This User is already booked');
+    const chekUserExists = await userRepository.findOne({
+      where: { email, }
+    })
 
+    if (chekUserExists) {
+      throw new Error('Email address already exists ');
     }
 
     const user = userRepository.create({
       name,
-      data: userDate
+      email,
+      password
     })
+    await userRepository.save(user);
 
-
-    await userRepository.save(user)
     return user;
-
-
   }
 }
 export default CreateUserService;
