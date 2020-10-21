@@ -1,12 +1,12 @@
 import { Router } from 'express';
 
+import usersRouter from './user.routes';
+
+
 const routes = Router();
 
-routes.post('/test', (req, res) => {
-  const { name, id } = req.body;
-  console.log(name, id)
-})
+
+routes.use('/users', usersRouter);
+
 
 export default routes;
-
-
